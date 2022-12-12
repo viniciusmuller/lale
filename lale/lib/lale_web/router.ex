@@ -21,9 +21,11 @@ defmodule LaleWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", LaleWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", LaleWeb do
+    pipe_through :api
+
+    resources "/logs", LogEntryController, only: [:index, :create]
+  end
 
   # Enables LiveDashboard only for development
   #

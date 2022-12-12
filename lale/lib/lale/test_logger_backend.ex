@@ -10,10 +10,6 @@ defmodule Lale.TestLoggerBackend do
     {:ok, :ok}
   end
 
-  defp stringify_trace({module, function, details, metadata}) do
-    "#{module} #{function}/#{inspect(details)} #{inspect(metadata)}"
-  end
-
   @impl true
   def handle_event({_level, gl, {Logger, _, _, _}}, state)
       when node(gl) != node() do
@@ -30,10 +26,10 @@ defmodule Lale.TestLoggerBackend do
 
     base_metadata = %{host: node(group_leader)}
 
+    # Figure out where this comes from (probably Phoenix)
     stacktrace =
-      # Figure out where this comes from (probably Phoenix)
       case Keyword.fetch(metadata, :crash_reason) do
-        {:ok, {_, traces}} -> %{stacktrace: Enum.map(traces, &stringify_trace/1)}
+        {:ok, {_, traces}} -> %{stacktrace: Enum.map(traces, &inspect/1)}
         :error -> %{}
       end
 
@@ -58,7 +54,17 @@ defmodule Lale.TestLoggerBackend do
       }
       |> IO.inspect()
 
-    IO.puts(Jason.Formatter.pretty_print(Jason.encode!(data)))
+    # json = Jason.Formatter.pretty_print(Jason.encode!(data))
+
+    # Finch.build(
+    #   :post,
+    #   "http://127.0.0.1:4000/api/logs",
+    #   [{"content-type", "application/json"}],
+    #   "{\"test\": 1}"
+    #   # Jason.encode!(data)
+    # )
+    # |> Finch.request(MyFinch)
+
     {:ok, state}
   end
 

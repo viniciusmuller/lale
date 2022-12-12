@@ -5,7 +5,8 @@ defmodule Lale.LogEntries.LogEntry do
   schema "log_entries" do
     field :timestamp, :utc_datetime
     field :application_id, :integer
-    field :content, :string
+    field :message, :string
+    field :metadata, :map
     field :level, :string
     field :request_id, :integer
 
@@ -15,7 +16,7 @@ defmodule Lale.LogEntries.LogEntry do
   @doc false
   def changeset(log_entry, attrs) do
     log_entry
-    |> cast(attrs, [:level, :content, :application_id, :request_id, :timestamp])
-    |> validate_required([:level, :content, :application_id, :timestamp])
+    |> cast(attrs, [:level, :message, :metadata, :application_id, :request_id, :timestamp])
+    |> validate_required([:level, :message, :metadata, :application_id, :timestamp])
   end
 end
