@@ -56,14 +56,12 @@ defmodule Lale.TestLoggerBackend do
 
     # json = Jason.Formatter.pretty_print(Jason.encode!(data))
 
-    # Finch.build(
-    #   :post,
-    #   "http://127.0.0.1:4000/api/logs",
-    #   [{"content-type", "application/json"}],
-    #   "{\"test\": 1}"
-    #   # Jason.encode!(data)
-    # )
-    # |> Finch.request(MyFinch)
+    # TODO: maybe use finch
+    HTTPoison.post!(
+      "http://127.0.0.1:4000/api/logs",
+      Jason.encode!(data),
+      [{"content-type", "application/json"}])
+    |> IO.inspect()
 
     {:ok, state}
   end
