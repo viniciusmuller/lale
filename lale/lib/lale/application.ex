@@ -7,6 +7,8 @@ defmodule Lale.Application do
 
   @impl true
   def start(_type, _args) do
+    Logger.add_backend(Lale.TestLoggerBackend)
+
     children = [
       # Start the Ecto repository
       Lale.Repo,
