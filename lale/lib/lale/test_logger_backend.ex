@@ -62,6 +62,11 @@ defmodule Lale.TestLoggerBackend do
     {:ok, state}
   end
 
+  def handle_event(:flush, _) do
+    # TODO: use buffering to send requests in batch
+    IO.inspect("custom logger backend is flushing")
+  end
+
   @impl true
   def handle_call({:configure, _opts}, state) do
     # new_state = reconfigure_state(state, options)
