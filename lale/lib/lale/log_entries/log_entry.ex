@@ -1,7 +1,9 @@
 defmodule Lale.LogEntries.LogEntry do
+
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:timestamp, :application_id, :message, :metadata, :level, :request_id]}
   schema "log_entries" do
     field :timestamp, :utc_datetime
     field :application_id, :integer

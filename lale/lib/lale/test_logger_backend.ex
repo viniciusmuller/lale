@@ -47,20 +47,20 @@ defmodule Lale.TestLoggerBackend do
 
     data =
       %{
+        application_id: "1",
         message: to_string(message),
         level: level,
         timestamp: timestamp,
         metadata: metadata
       }
       |> IO.inspect()
+      |> Jason.encode!()
 
-    # json = Jason.Formatter.pretty_print(Jason.encode!(data))
-
-    # TODO: maybe use finch
-    HTTPoison.post!(
-      "http://127.0.0.1:4000/api/logs",
-      Jason.encode!(data),
-      [{"content-type", "application/json"}])
+    # TODO: Extract this backend logic to another package (or maybe use this one)
+    # we cannot test the logger backend in the application itself, since it will
+    # try to send requests to itself after logging, which will generate more logs...
+    Finch.build(:post, "http://127.0.0.1:4000/api/logs", [{"content-type", "application/json"}], data)
+    |> Finch.request(MyFinch)
     |> IO.inspect()
 
     {:ok, state}
@@ -79,5 +79,5 @@ defmodule Lale.TestLoggerBackend do
 end
 
 defimpl Jason.Encoder, for: PID do
-  def encode(pid, _opts), do: inspect(pid)
+  def encode(pid, _opts), do: "\"#{inspect pid}\""
 end

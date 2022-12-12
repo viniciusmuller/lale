@@ -10,6 +10,7 @@ defmodule Lale.Application do
     Logger.add_backend(Lale.TestLoggerBackend)
 
     children = [
+      {Finch, name: MyFinch},
       # Start the Ecto repository
       Lale.Repo,
       # Start the Telemetry supervisor
